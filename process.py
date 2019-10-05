@@ -240,7 +240,7 @@ class ProcessDigest(Thread):
                 # Format with same method as other posts
                 h = self.post_to_html(p, 'Featured')
                 caption = 'Featured Post'
-                img = '<img src="%s" style="width:70px;height:70px;border-radius:50%%">' % p['avatar']
+                img = '<img src="%s" style="width:45px;height:45px;border-radius:50%%">' % p['avatar']
 
                 # Add avatar and caption to the post
                 html = '<table>'
@@ -313,10 +313,10 @@ class ProcessDigest(Thread):
 
 
                 recipients = ['markschmucker@yahoo.com',
-                              'mhr.uncgolf@gmail.com',
-                              'andrewgoldberg@gmail.com',
-                              'dan.rudolph@live.com',
-                              'robert.fakheri@gmail.com'
+                              # 'mhr.uncgolf@gmail.com',
+                              # 'andrewgoldberg@gmail.com',
+                              # 'dan.rudolph@live.com',
+                              # 'robert.fakheri@gmail.com'
                               ]
 
                 if email_address not in recipients:
