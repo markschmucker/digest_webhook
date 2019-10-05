@@ -308,7 +308,7 @@ class ProcessDigest(Thread):
                 manage_emails_url = ''
 
                 email_address = data['email']
-                template = 'emails/stripo_export_html.html'
+                template = 'template.html'
 
 
 
