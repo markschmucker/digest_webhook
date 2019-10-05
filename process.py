@@ -313,10 +313,10 @@ class ProcessDigest(Thread):
 
 
                 recipients = ['markschmucker@yahoo.com',
-                              # 'mhr.uncgolf@gmail.com',
-                              # 'andrewgoldberg@gmail.com',
-                              # 'dan.rudolph@live.com',
-                              # 'robert.fakheri@gmail.com'
+                              'mhr.uncgolf@gmail.com',
+                              'andrewgoldberg@gmail.com',
+                              'dan.rudolph@live.com',
+                              'robert.fakheri@gmail.com'
                               ]
 
                 if email_address not in recipients:
