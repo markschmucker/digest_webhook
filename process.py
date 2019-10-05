@@ -340,13 +340,13 @@ class ProcessDigest(Thread):
 
 
 if __name__ == '__main__':
-    f = file('emails/t.json', 'rt')
+    f = file('t.json', 'rt')
     s = f.read()
     f.close()
 
     d = json.loads(s)
 
-    if 1:
+    if 0:
         t = ProcessDigest(d)
         t.start()
     else:
