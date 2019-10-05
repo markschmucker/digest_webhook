@@ -323,18 +323,18 @@ class ProcessDigest(Thread):
                     print 'not emailing s', email_address
                     return
 
-                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username).start()
+                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username)
 
                 # also email to me, for now
 
                 email_address = 'markschmucker@yahoo.com'
-                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username).start()
+                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username)
 
                 email_address = 'markschmucker0@gmail.com'
-                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username).start()
+                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username)
 
                 email_address = 'admin506@protonmail.com'
-                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username).start()
+                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username)
 
                 logger.info('emailed %s %s' % (username, email_address))
 
