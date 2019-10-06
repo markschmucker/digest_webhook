@@ -46,7 +46,7 @@ class ProcessDigest(Thread):
             txt = self._spacify(txt)
         return txt
 
-    def post_to_html(self, post, topic):
+    def post_to_html(self, post, topic, max_len=200):
 
         s = ''
         if post['raw']:
@@ -63,7 +63,7 @@ class ProcessDigest(Thread):
             s += ': '
             s += ' '
 
-            s += self.shorten(self.spacify(post['raw']))
+            s += self.shorten(self.spacify(post['raw']), max_len)
             s += ' '
             #s += post_url(post, topic) + '...'
             s += '<a href="%s">More...</a>' % post['url']
@@ -237,8 +237,8 @@ class ProcessDigest(Thread):
         p = self.data.get('special_post')
         if p:
             if p['raw']:
-                # Format with same method as other posts
-                h = self.post_to_html(p, 'Featured')
+                # Format with same method as other posts, but allow 500 chars
+                h = self.post_to_html(p, 'Featured', 500)
                 caption = 'Featured Post'
                 img = '<img src="%s" style="width:45px;height:45px;border-radius:50%%">' % p['avatar']
 
