@@ -280,7 +280,7 @@ class ProcessDigest(Thread):
         data = self.data
         if data:
             topics = data['activity']
-            print 'Digest.run got username = %s, %d topics' % (data['username'], len(topics))
+            print 'Digest.run got %s, %s, %d topics' % (data['username'], data['email'], len(topics))
             if topics:
                 # Pre-processing for convenience
                 self.patch(topics)
@@ -320,7 +320,7 @@ class ProcessDigest(Thread):
                               ]
 
                 if email_address not in recipients:
-                    print 'not emailing s', email_address
+                    #print 'not emailing s', email_address
                     return
 
                 send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username)
