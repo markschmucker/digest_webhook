@@ -7,10 +7,11 @@ from botocore.exceptions import ClientError
 
 
 def send_digest_email(recipient, topics_contents, posts_contents, summary, subject,
-                      manage_emails_url, template, testimonial_contents, username):
+                      manage_emails_url, template, special_contents, favorite_contents, username):
     """ Assemble the contents into a template and send it using SES """
 
-    testimonial_contents = testimonial_contents or ''
+    special_contents = special_contents or ''
+    favorite_contents = favorite_contents or ''
 
     f = file(template, 'rt')
     email_template = f.read()
@@ -21,7 +22,8 @@ def send_digest_email(recipient, topics_contents, posts_contents, summary, subje
     contents = contents.replace('[[POSTS]]', posts_contents)
     contents = contents.replace('[[ACTIVITY_SUMMARY]]', summary)
     contents = contents.replace('[[MANAGE_EMAILS_URL]]', manage_emails_url)
-    contents = contents.replace('[[TESTIMONIAL]]', testimonial_contents)
+    contents = contents.replace('[[SPECIAL_POST]]', special_contents)
+    contents = contents.replace('[[FAVORITE_POST]]', favorite_contents)
     contents = contents.replace('[[USERNAME]]', username)
 
     # This address must be verified with Amazon SES.

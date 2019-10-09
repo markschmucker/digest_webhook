@@ -231,7 +231,7 @@ class ProcessDigest(Thread):
         s = freq_to_str.get(self.data.get('frequency'), '')
         return '[506] Investor Group %sSummary' % s
 
-    def get_testimonial(self):
+    def get_special_post(self):
         html = ''
         # Special post is optional in admin settings
         p = self.data.get('special_post')
@@ -240,6 +240,31 @@ class ProcessDigest(Thread):
                 # Format with same method as other posts, but allow 500 chars
                 h = self.post_to_html(p, 'Featured', 500)
                 caption = 'Featured Post'
+                img = '<img src="%s" style="width:45px;height:45px;border-radius:50%%">' % p['avatar']
+
+                # Add avatar and caption to the post
+                html = '<table>'
+                html += '<tr>'
+                html += '<td>'
+                html += img
+                html += '</td>'
+                html += '<td style="padding-left:20px">'
+                html += caption
+                html += h
+                html += '</td>'
+                html += '</tr>'
+                html += '</table>'
+        return html
+
+    def get_favorite_post(self):
+        html = ''
+        # Favorite post is updated by discourse-favorite-post-plugin
+        p = self.data.get('favorite_post')
+        if p:
+            if p['raw']:
+                # Format with same method as other posts, but allow 500 chars
+                h = self.post_to_html(p, 'Favorite', 500)
+                caption = 'Most-Liked, Past 5 Days'
                 img = '<img src="%s" style="width:45px;height:45px;border-radius:50%%">' % p['avatar']
 
                 # Add avatar and caption to the post
@@ -302,7 +327,8 @@ class ProcessDigest(Thread):
                 posts_contents = ''.join(post_contents)
                 topics_contents = self.make_topics_table(topics)
 
-                featured_contents = self.get_testimonial()
+                special_contents = self.get_special_post()
+                favorite_contents = self.get_favorite_post()
 
                 # dummy arg for now:
                 manage_emails_url = ''
@@ -323,18 +349,11 @@ class ProcessDigest(Thread):
                     #print 'not emailing s', email_address
                     return
 
-                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username)
+                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, special_contents, favorite_contents, username)
 
                 # also email to me, for now
-
-                email_address = 'markschmucker@yahoo.com'
-                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username)
-
-                email_address = 'markschmucker0@gmail.com'
-                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username)
-
-                email_address = 'admin506@protonmail.com'
-                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, featured_contents, username)
+                for email_address in ['markschmucker@yahoo.com', 'markschmucker0@gmail.com', 'admin506@protonmail.com']:
+                    send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, special_contents, favorite_contents, username)
 
                 logger.info('emailed %s %s' % (username, email_address))
 
