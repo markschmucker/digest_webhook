@@ -6,15 +6,16 @@ import boto3
 from botocore.exceptions import ClientError
 
 container_template_filename = 'container.html'
+template_filename = 'template.html'
 
 def send_digest_email(recipient, topics_contents, posts_contents, summary, subject,
-                      manage_emails_url, template, special_contents, favorite_contents, username):
+                      manage_emails_url, special_contents, favorite_contents, username):
     """ Assemble the contents into a template and send it using SES """
 
     special_contents = special_contents or ''
     favorite_contents = favorite_contents or ''
 
-    f = file(template, 'rt')
+    f = file(template_filename, 'rt')
     email_template = f.read()
     f.close()
 

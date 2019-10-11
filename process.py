@@ -6,6 +6,7 @@ import json
 from sets import Set
 from ses import send_digest_email
 
+
 class ProcessDigest(Thread):
 
     def __init__(self, data):
@@ -256,29 +257,33 @@ class ProcessDigest(Thread):
                 html += '</table>'
         return html
 
-    def get_favorite_post(self):
+    def get_favorite_post(self, p):
         html = ''
-        # Favorite post is updated by discourse-favorite-post-plugin
-        p = self.data.get('favorite_post')
-        if p:
-            if p['raw']:
-                # Format with same method as other posts, but allow 500 chars
-                h = self.post_to_html(p, 'Favorite', 500)
-                caption = 'Most-Liked, Past 5 Days'
-                img = '<img src="%s" style="width:45px;height:45px;border-radius:50%%">' % p['avatar']
+        if p['raw']:
+            # Format with same method as other posts, but allow 500 chars
+            h = self.post_to_html(p, 'Favorite', 500)
+            caption = 'Most-Liked, Past 5 Days'
+            img = '<img src="%s" style="width:45px;height:45px;border-radius:50%%">' % p['avatar']
 
-                # Add avatar and caption to the post
-                html = '<table>'
-                html += '<tr>'
-                html += '<td>'
-                html += img
-                html += '</td>'
-                html += '<td style="padding-left:20px">'
-                html += caption
-                html += h
-                html += '</td>'
-                html += '</tr>'
-                html += '</table>'
+            # Add avatar and caption to the post
+            html = '<table>'
+            html += '<tr>'
+            html += '<td>'
+            html += img
+            html += '</td>'
+            html += '<td style="padding-left:20px">'
+            html += caption
+            html += h
+            html += '</td>'
+            html += '</tr>'
+            html += '</table>'
+        return html
+
+    def get_favorite_posts(self):
+        html = ''
+        posts = self.data.get('favorite_posts')
+        for p in posts:
+            html += self.get_favorite_post(p)
         return html
 
     def patch(self, topics):
@@ -328,32 +333,30 @@ class ProcessDigest(Thread):
                 topics_contents = self.make_topics_table(topics)
 
                 special_contents = self.get_special_post()
-                favorite_contents = self.get_favorite_post()
+                favorite_contents = self.get_favorite_posts()
 
                 # dummy arg for now:
                 manage_emails_url = ''
 
                 email_address = data['email']
-                template = 'template.html'
-
 
 
                 recipients = ['markschmucker@yahoo.com',
-                              'mhr.uncgolf@gmail.com',
-                              'andrewgoldberg@gmail.com',
-                              'dan.rudolph@live.com',
-                              'robert.fakheri@gmail.com'
+                              #'mhr.uncgolf@gmail.com',
+                              #'andrewgoldberg@gmail.com',
+                              #'dan.rudolph@live.com',
+                              #'robert.fakheri@gmail.com'
                               ]
 
                 if email_address not in recipients:
                     #print 'not emailing s', email_address
                     return
 
-                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, special_contents, favorite_contents, username)
+                send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, special_contents, favorite_contents, username)
 
                 # also email to me, for now
                 for email_address in ['markschmucker@yahoo.com', 'markschmucker0@gmail.com', 'admin506@protonmail.com']:
-                    send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, template, special_contents, favorite_contents, username)
+                    send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, special_contents, favorite_contents, username)
 
                 logger.info('emailed %s %s' % (username, email_address))
 
