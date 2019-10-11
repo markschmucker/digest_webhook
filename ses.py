@@ -5,6 +5,7 @@ Send emails using SES. SES Credentials must be stored in ~/.aws/credentials.
 import boto3
 from botocore.exceptions import ClientError
 
+container_template_filename = 'container.html'
 
 def send_digest_email(recipient, topics_contents, posts_contents, summary, subject,
                       manage_emails_url, template, special_contents, favorite_contents, username):
@@ -17,7 +18,15 @@ def send_digest_email(recipient, topics_contents, posts_contents, summary, subje
     email_template = f.read()
     f.close()
 
+    f = file(container_template_filename, 'rt')
+    container = f.read()
+    f.close()
+
     contents = email_template
+    if special_contents or favorite_contents:
+        contents = contents.replace('[[CONTAINER]]', container)
+    else:
+        contents = contents.replace('[[CONTAINER]]', '')      
     contents = contents.replace('[[TOPICS]]', topics_contents)
     contents = contents.replace('[[POSTS]]', posts_contents)
     contents = contents.replace('[[ACTIVITY_SUMMARY]]', summary)
