@@ -282,8 +282,9 @@ class ProcessDigest(Thread):
     def get_favorite_posts(self):
         html = ''
         posts = self.data.get('favorite_posts')
-        for p in posts:
-            html += self.get_favorite_post(p)
+        if posts:
+            for p in posts:
+                html += self.get_favorite_post(p)
         return html
 
     def patch(self, topics):
