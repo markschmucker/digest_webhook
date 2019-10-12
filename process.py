@@ -239,8 +239,8 @@ class ProcessDigest(Thread):
         if p:
             if p['raw']:
                 # Format with same method as other posts, but allow 500 chars
-                h = self.post_to_html(p, 'Featured', 500)
-                caption = 'Featured Post'
+                h = self.post_to_html(p, 'Announcement', 500)
+                caption = 'Important Announcement'
                 img = '<img src="%s" style="width:45px;height:45px;border-radius:50%%">' % p['avatar']
 
                 # Add avatar and caption to the post
@@ -249,8 +249,10 @@ class ProcessDigest(Thread):
                 html += '<td>'
                 html += img
                 html += '</td>'
-                html += '<td style="padding-left:20px">'
+                html += '<td style="padding-left:20px;color:#%s">' % '888888'
+                html += '<b>'
                 html += caption
+                html += '</b>'
                 html += h
                 html += '</td>'
                 html += '</tr>'
@@ -262,7 +264,7 @@ class ProcessDigest(Thread):
         if p['raw']:
             # Format with same method as other posts, but allow 500 chars
             h = self.post_to_html(p, 'Favorite', 500)
-            caption = 'Most-Liked, Past 5 Days'
+            caption = 'Today\'s Most-Liked Post'
             img = '<img src="%s" style="width:45px;height:45px;border-radius:50%%">' % p['avatar']
 
             # Add avatar and caption to the post
@@ -271,8 +273,10 @@ class ProcessDigest(Thread):
             html += '<td>'
             html += img
             html += '</td>'
-            html += '<td style="padding-left:20px">'
+            html += '<td style="padding-left:20px;color:#%s">' % '888888'
+            html += '<b>'
             html += caption
+            html += '</b>'
             html += h
             html += '</td>'
             html += '</tr>'
