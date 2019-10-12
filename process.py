@@ -249,10 +249,12 @@ class ProcessDigest(Thread):
                 html += '<td>'
                 html += img
                 html += '</td>'
-                html += '<td style="padding-left:20px;color:#%s">' % '888888'
+                html += '<td style="padding-left:20px">'
+                html += '<div style="color:#%s">' % '888888'
                 html += '<b>'
                 html += caption
                 html += '</b>'
+                html += '</div>'
                 html += h
                 html += '</td>'
                 html += '</tr>'
@@ -274,9 +276,11 @@ class ProcessDigest(Thread):
             html += img
             html += '</td>'
             html += '<td style="padding-left:20px;color:#%s">' % '888888'
+            html += '<div style="color:#%s">' % '888888'
             html += '<b>'
             html += caption
             html += '</b>'
+            html += '</div>'
             html += h
             html += '</td>'
             html += '</tr>'
