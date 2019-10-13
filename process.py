@@ -6,6 +6,8 @@ import json
 from sets import Set
 from ses import send_digest_email
 
+transparent_image = '<img src="https://forum.506investorgroup.com/uploads/default/original/2X/7/75021bfe618e0d724ff14bd272528bf036a40633.png" style="width:10px;height:10px;padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px;background-color:#%s">'
+
 
 class ProcessDigest(Thread):
 
@@ -96,12 +98,16 @@ class ProcessDigest(Thread):
             html += '<p style="color:#%s;">' % '888888'
 
             # table, not span, works for color emblem in Outlook
-            html += '<table style="width:10px;height:10px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;background-color:#%s">' % color
-            html += '<tr padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
-            html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
-            html += '</td>'
-            html += '</tr>'
-            html += '</table>'
+            if 1:
+                html += '<table style="width:10px;height:10px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px">'
+                html += '<tr padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
+                html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
+                html += transparent_image % color
+                html += '</td>'
+                html += '</tr>'
+                html += '</table>'
+            else:
+                html += transparent_image % color
 
             html += '</p>'
 
@@ -159,29 +165,20 @@ class ProcessDigest(Thread):
         html += '</td>'
         html += '</tr>'
 
+
         # row for emblem, cats, and tags
+        # This requires an inner table where column widths can be different from the outer table
         html += '<tr>'
         html += '<td>'
-
-        # Color emblem is surprisingly hard to get square in Outlook. Recommended approach
-        # is to use the background color of a table.
-        html += '<table style="padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px">'
+        html += '<table padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
         html += '<tr>'
-        html += '<td>'
-        html += '<table style="width:10px;height:10px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;background-color:#%s">' % color
-        html += '<tr padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
-        html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
+        html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;width=10px>'
+        html += transparent_image % color
         html += '</td>'
-        html += '</tr>'
-        html += '</table>'
-
-        html += '</td>'
-
-        html += '<td>'
+        html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;text-align:left>'
         html += ' '
         html += ' | '.join(cats_and_tags)
         html += '</td>'
-
         html += '</tr>'
         html += '</table>'
         html += '</td>'
@@ -275,7 +272,7 @@ class ProcessDigest(Thread):
             html += '<td>'
             html += img
             html += '</td>'
-            html += '<td style="padding-left:20px;color:#%s">' % '888888'
+            html += '<td style="padding-left:20px">' # need to push this change, else most-liked will be grey
             html += '<div style="color:#%s">' % '888888'
             html += '<b>'
             html += caption
@@ -365,7 +362,7 @@ class ProcessDigest(Thread):
 
                 # also email to me, for now
                 for email_address in ['markschmucker@yahoo.com', 'markschmucker0@gmail.com', 'admin506@protonmail.com']:
-                    send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, special_contents, favorite_contents, username)
+                   send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, special_contents, favorite_contents, username)
 
                 logger.info('emailed %s %s' % (username, email_address))
 
@@ -376,8 +373,10 @@ if __name__ == '__main__':
     f.close()
 
     d = json.loads(s)
+    d['username'] = 'admin'
+    d['email'] = 'markschmucker@yahoo.com'
 
-    if 0:
+    if 1:
         t = ProcessDigest(d)
         t.start()
     else:
