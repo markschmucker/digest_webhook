@@ -98,16 +98,12 @@ class ProcessDigest(Thread):
             html += '<p style="color:#%s;">' % '888888'
 
             # table, not span, works for color emblem in Outlook
-            if 1:
-                html += '<table style="width:10px;height:10px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px">'
-                html += '<tr padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
-                html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
-                html += transparent_image % color
-                html += '</td>'
-                html += '</tr>'
-                html += '</table>'
-            else:
-                html += transparent_image % color
+            html += '<table style="width:10px;height:10px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;background-color:#%s">' % color
+            html += '<tr padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
+            html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
+            html += '</td>'
+            html += '</tr>'
+            html += '</table>'
 
             html += '</p>'
 
@@ -131,6 +127,17 @@ class ProcessDigest(Thread):
             html += '</ul>'
 
         return html
+
+    def color_block(self, color):
+        html = '<table padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;width=10px;height=10px;background-color=#%s>' % color
+        html += '<tr>'
+        html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;>'
+        html += ' '
+        html += '</td>'
+        html += '</tr>'
+        html += '</table>'
+        return html
+
 
     def topic_to_html(self, topic):
         if topic['new_topic']:
@@ -166,23 +173,36 @@ class ProcessDigest(Thread):
         html += '</tr>'
 
 
+
         # row for emblem, cats, and tags
-        # This requires an inner table where column widths can be different from the outer table
         html += '<tr>'
         html += '<td>'
-        html += '<table padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
+
+        # Color emblem is surprisingly hard to get square in Outlook. Recommended approach
+        # is to use the background color of a table.
+        html += '<table style="padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px">'
         html += '<tr>'
-        html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;width=10px>'
-        html += transparent_image % color
+        html += '<td>'
+        html += '<table style="width:10px;height:10px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;background-color:#%s">' % color
+        html += '<tr padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
+        html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
         html += '</td>'
-        html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;text-align:left>'
+        html += '</tr>'
+        html += '</table>'
+
+        html += '</td>'
+
+        html += '<td>'
         html += ' '
         html += ' | '.join(cats_and_tags)
         html += '</td>'
+
         html += '</tr>'
         html += '</table>'
         html += '</td>'
         html += '</tr>'
+
+
 
         # Each post in the topic
         for post in topic['posts']:
