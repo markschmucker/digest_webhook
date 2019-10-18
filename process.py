@@ -374,15 +374,15 @@ class ProcessDigest(Thread):
                               'robert.fakheri@gmail.com'
                               ]
 
-                if email_address not in recipients:
-                    #print 'not emailing s', email_address
-                    return
+                #if email_address not in recipients:
+                #    #print 'not emailing s', email_address
+                #    return
 
                 send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, special_contents, favorite_contents, username)
 
                 # also email to me, for now
-                for email_address in ['markschmucker@yahoo.com', 'markschmucker0@gmail.com', 'admin506@protonmail.com']:
-                   send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, special_contents, favorite_contents, username)
+                #for email_address in ['markschmucker@yahoo.com', 'markschmucker0@gmail.com', 'admin506@protonmail.com']:
+                #   send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, special_contents, favorite_contents, username)
 
                 logger.info('emailed %s %s' % (username, email_address))
 
