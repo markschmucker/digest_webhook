@@ -144,7 +144,10 @@ class ProcessDigest(Thread):
             title = '[New Topic] ' + topic['topic_name']
         else:
             title = topic['topic_name']
-        url = topic['topic_url']
+        try:
+            url = topic['posts'][0]['url']
+        except Exception:
+            url = topic['topic_url']
         cats = topic['topic_categories']
         tags = topic['topic_tags']
         color = topic['topic_emblem_or_color']
