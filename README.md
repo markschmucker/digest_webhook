@@ -6,3 +6,5 @@ This webhook is called by a related plugin. For each call, it assembles the data
 To run it:
 
 > nohup python webhook.py &
+
+Port 8081 must be open.
