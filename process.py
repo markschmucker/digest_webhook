@@ -4,7 +4,7 @@ from threading import Thread
 from log import logger
 import json
 from sets import Set
-from ses import send_digest_email
+from ses import send_digest_email, send_simple_email
 
 transparent_image = '<img src="https://forum.506investorgroup.com/uploads/default/original/2X/7/75021bfe618e0d724ff14bd272528bf036a40633.png" alt="*" style="width:10px;height:10px;padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px;background-color:#%s">'
 
@@ -377,9 +377,12 @@ class ProcessDigest(Thread):
                               'robert.fakheri@gmail.com'
                               ]
 
-                #if email_address not in recipients:
-                #    #print 'not emailing s', email_address
-                #    return
+                # send myself a few summaries to debug duplicates, since I might set my freq different
+                if email_address in recipients:
+                    try:
+                        send_simple_email('markschmucker@yahoo.com', 'json to debug', json.dumps(data))
+                    except Exception:
+                        pass
 
                 send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, special_contents, favorite_contents, username)
 
