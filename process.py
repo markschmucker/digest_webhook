@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from datetime import datetime, timedelta
 import dateutil.parser
 from threading import Thread
@@ -20,6 +22,7 @@ class ProcessDigest(Thread):
 
         Thread.__init__(self)
         self.data = data
+        self.ordered_categories = []
         self.ordered_main_categories = []
 
     def shorten(self, text, chars=200):
@@ -85,7 +88,7 @@ class ProcessDigest(Thread):
         # target for "back to top"
         html += '<a rel="nofollow" name="topic_table"></a>'
 
-        for cat in self.ordered_main_categories:
+        for cat in self.ordered_categories:
             # Note topic_categories may be joined by now
             topics_in_cat = [t for t in topics if cat == t['topic_categories']]
             color = topics_in_cat[0]['topic_emblem_or_color']
@@ -321,10 +324,9 @@ class ProcessDigest(Thread):
             # Add a flag indicating whether it's a new topic
             post_nums = [int(p['url'].split('/')[-1]) for p in topic['posts']]
             topic['new_topic'] = any([x==1 for x in post_nums])
-
-            # Convert list of cats to single string so they break out by subcategory
+            # I think I fixed the problem but now I'm confused whether this line
+            # should be here.
             topic['topic_categories'] = ' | '.join(topic['topic_categories'])
-
 
     def order_categories(self, topics):
         # Create a common ordering to be followed by the topics table and the posts.
@@ -332,7 +334,8 @@ class ProcessDigest(Thread):
         # uniqify
         cats = list(Set(cats))
         cats.sort()
-        self.ordered_main_categories = cats
+        self.ordered_categories = cats
+        self.ordered_main_categories = [c for c in cats if not '|' in c]
 
     def run(self):
         # Data is the json as dict
@@ -377,12 +380,11 @@ class ProcessDigest(Thread):
                               'robert.fakheri@gmail.com'
                               ]
 
-                # send myself a few summaries to debug duplicates, since I might set my freq different
-                if email_address in recipients:
-                    try:
-                        send_simple_email('markschmucker@yahoo.com', 'json to debug', json.dumps(data))
-                    except Exception:
-                        pass
+                # if email_address in recipients:
+                #     try:
+                #         send_simple_email('markschmucker@yahoo.com', 'json to debug', json.dumps(data))
+                #     except Exception:
+                #         pass
 
                 send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, special_contents, favorite_contents, username)
 
@@ -394,11 +396,13 @@ class ProcessDigest(Thread):
 
 
 if __name__ == '__main__':
-    f = file('t.json', 'rt')
-    s = f.read()
-    f.close()
+    # f = file('t.json', 'rt')
+    # s = f.read()
+    # f.close()
 
-    d = json.loads(s)
+    from debug import s
+
+    d = json.loads(s, strict=False)
     d['username'] = 'admin'
     d['email'] = 'markschmucker@yahoo.com'
 
