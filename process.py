@@ -11,6 +11,10 @@ from ses import send_digest_email, send_simple_email
 transparent_image = '<img src="https://forum.506investorgroup.com/uploads/default/original/2X/7/75021bfe618e0d724ff14bd272528bf036a40633.png" alt="*" style="width:10px;height:10px;padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px;background-color:#%s">'
 
 
+def cmp_topic_categories(x, y):
+    return cmp(x['topic_categories'], y['topic_categories'])
+
+
 class ProcessDigest(Thread):
 
     def __init__(self, data):
@@ -335,7 +339,13 @@ class ProcessDigest(Thread):
         cats = list(Set(cats))
         cats.sort()
         self.ordered_categories = cats
-        self.ordered_main_categories = [c for c in cats if not '|' in c]
+        # This is along the right track, but also need first cat if pipe,
+        # plus all if not pipe, then uniqify.
+        a = [c for c in cats if '|' not in c]
+        b = [c.split('|')[0].strip() for c in cats if '|' in c]
+        self.ordered_main_categories = list(Set(a + b))
+        self.ordered_main_categories.sort()
+        print self.ordered_main_categories
 
     def run(self):
         # Data is the json as dict
@@ -354,6 +364,7 @@ class ProcessDigest(Thread):
                 post_contents = []
                 for cat in self.ordered_main_categories:
                     topics_in_cat = [t for t in topics if cat in t['topic_categories']]
+                    topics_in_cat.sort(cmp=cmp_topic_categories)
                     for topic in topics_in_cat:
                         post_content = self.topic_to_html(topic)
                         post_contents.append(post_content)
