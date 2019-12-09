@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """
 A flask server to handle webhooks from the digests plugin.
 """
