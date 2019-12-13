@@ -15,6 +15,10 @@ def cmp_topic_categories(x, y):
     return cmp(x['topic_categories'], y['topic_categories'])
 
 
+def cmp_timestamp(x, y):
+    return cmp(x['timestamp'], y['timestamp'])
+
+
 class ProcessDigest(Thread):
 
     def __init__(self, data):
@@ -212,7 +216,7 @@ class ProcessDigest(Thread):
         html += '</td>'
         html += '</tr>'
 
-
+        topic['posts'].sort(cmp=cmp_timestamp)
 
         # Each post in the topic
         for post in topic['posts']:
