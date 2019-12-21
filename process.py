@@ -179,14 +179,31 @@ class ProcessDigest(Thread):
 
         # Topic title, with link to topic on forum
         html += '<tr>'
+
+        # start with Deal Summary button before topic? I didn't get this to work yet
+        # but haven't spent much time. Anyway the link is safer and more explicit.
+        # if 'Investments' in cats or 'Platforms' in cats:
+        #     deal_summary_img = 'https://forum.506investorgroup.com/user_avatar/forum.506investorgroup.com/summary/26/2120_2.png'
+        #     img = '<img src="%s" style="width:26px;height:26px;border-radius:50%%">' % deal_summary_img
+        #     html += img
+        #
+        #     html += '<td>'
+        #     html += '<table style="width:26px;height:26px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;background-image:#%s">' % deal_summary_img
+        #     html += '<tr padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
+        #     html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
+        #     # html += '<a style="text-decoration:none" href="%s">%s</a>' % (topic['topic_url'], 'Deal Summary')
+        #     html += '<a href="%s">&nbsp;</a>' % topic['topic_url']
+        #     html += '</td>'
+        #     html += '</tr>'
+        #     html += '</table>'
+        #     html += '</td>'
+
         html += '<td>'
         html += '<h3 style="margin-top:15px;margin-bottom:5px">'
         html += '<a style="text-decoration:none" href="%s">%s</a>' % (url, title)
         html += '</h3>'
         html += '</td>'
         html += '</tr>'
-
-
 
         # row for emblem, cats, and tags
         html += '<tr>'
@@ -215,6 +232,20 @@ class ProcessDigest(Thread):
         html += '</table>'
         html += '</td>'
         html += '</tr>'
+
+
+        # row for Deal Summary
+        if 'Investments' in cats or 'Platforms' in cats:
+            html += '<tr>'
+            html += '<td>'
+            html += '<h4 style="margin-top:15px;margin-bottom:5px">'
+            html += 'This topic has a '
+            html += '<a style="text-decoration:none" href="%s">%s</a>' % (topic['topic_url'], 'Deal Summary')
+            html += '.'
+            html += '</h4>'
+            html += '</td>'
+            html += '</tr>'
+
 
         topic['posts'].sort(cmp=cmp_timestamp)
 
