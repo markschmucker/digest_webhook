@@ -49,10 +49,8 @@ def send_digest_email(recipient, topics_contents, posts_contents, summary, subje
 
     # The email body for recipients with non-HTML email clients.
     # I did not do this as nobody in the group is using text-only emails.
-    BODY_TEXT = ("Amazon SES Test (Python)\r\n"
-                 "This email was sent with Amazon SES using the "
-                 "AWS SDK for Python (Boto)."
-                 )
+    # But this text is shown in Andrew's emails at least. So removing it.
+    BODY_TEXT = ("")
 
     # The HTML body of the email.
     BODY_HTML = contents
