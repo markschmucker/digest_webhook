@@ -386,6 +386,15 @@ class ProcessDigest(Thread):
         # Data is the json as dict
         data = self.data
         if data:
+            
+            # email before patching or otherwise messing with the data
+            if data['email'] == 'markschmucker@yahoo.com':
+                try:
+                    send_simple_email('markschmucker@yahoo.com', 'json to debug', json.dumps(data))
+                except Exception:
+                    pass
+            
+            
             topics = data['activity']
             print 'Digest.run got %s, %s, %d topics' % (data['username'], data['email'], len(topics))
             if topics:
@@ -425,12 +434,6 @@ class ProcessDigest(Thread):
                               'dan.rudolph@live.com',
                               'robert.fakheri@gmail.com'
                               ]
-
-                if email_address == 'markschmucker@yahoo.com':
-                    try:
-                        send_simple_email('markschmucker@yahoo.com', 'json to debug', json.dumps(data))
-                    except Exception:
-                        pass
 
                 send_digest_email(email_address, topics_contents, posts_contents, summary, subject, manage_emails_url, special_contents, favorite_contents, username)
 
