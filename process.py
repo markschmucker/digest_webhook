@@ -363,8 +363,12 @@ class ProcessDigest(Thread):
             # Add a flag indicating whether it's a new topic
             post_nums = [int(p['url'].split('/')[-1]) for p in topic['posts']]
             topic['new_topic'] = any([x==1 for x in post_nums])
-            # I think I fixed the problem but now I'm confused whether this line
-            # should be here.
+
+            # I should not have modified topic_categories in place- I need the
+            # original topic_categories, as a list. To ensure I don't break anything,
+            # I'm saving it to a new key.
+            topic['original_topic_categories'] = topic['topic_categories']
+
             topic['topic_categories'] = ' | '.join(topic['topic_categories'])
 
     def order_categories(self, topics):
@@ -407,7 +411,23 @@ class ProcessDigest(Thread):
 
                 post_contents = []
                 for cat in self.ordered_main_categories:
-                    topics_in_cat = [t for t in topics if cat in t['topic_categories']]
+
+                    # The duplicate topics are because of this line. When cat = Deals,
+                    # and a topic's topic_categories is Premium Deals, then cat is in
+                    # topic_categories. Need to check for equality, not containment.
+                    # That's more complicated than it should be, because I've modified
+                    # topic_categories in-place. I need to retain the original list,
+                    # perhaps in a new key original_topic_categories, and change this
+                    # line to test for equality of cat and original_topic_categories[0].
+                    # Note cat is the *main* category.
+
+                    # I can test using new json every day now, so no hurry.
+
+                    # topics_in_cat = [t for t in topics if cat in t['topic_categories']]
+                    # This fixes it in one case at least.
+                    topics_in_cat = [t for t in topics if cat == t['original_topic_categories'][0]]
+
+
                     topics_in_cat.sort(cmp=cmp_topic_categories)
                     for topic in topics_in_cat:
                         post_content = self.topic_to_html(topic)
