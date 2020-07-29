@@ -26,5 +26,5 @@ file_handler.setLevel(logging.INFO)
 
 #logger.addHandler(mail_handler)
 logger.addHandler(file_handler)
-logger.setLevel(logging.WARNING)
+logger.setLevel(logging.INFO)
 logger.info('Starting...')
