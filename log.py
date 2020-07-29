@@ -20,7 +20,7 @@ mail_handler.setFormatter(formatter)
 mail_handler.setLevel(logging.ERROR)
 """
 
-file_handler = logging.FileHandler('digest.log')
+file_handler = logging.FileHandler('digest_webhook.log')
 file_handler.setFormatter(formatter)
 file_handler.setLevel(logging.INFO)
 
