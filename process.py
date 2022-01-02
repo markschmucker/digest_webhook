@@ -10,6 +10,44 @@ from ses import send_digest_email, send_simple_email
 
 transparent_image = '<img src="https://forum.506investorgroup.com/uploads/default/original/2X/7/75021bfe618e0d724ff14bd272528bf036a40633.png" alt="*" style="width:10px;height:10px;padding-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px;background-color:#%s">'
 
+# Colored bullets
+bullets = [
+    'https://forum.506investorgroup.com/uploads/default/original/2X/3/30d42e29d80ee276d03dc30b3c7cbbbddf423d36.png',
+    'https://forum.506investorgroup.com/uploads/default/original/2X/b/b81252ae174dfa6646fdfa70e6f465ebdddb51cc.png',
+    'https://forum.506investorgroup.com/uploads/default/original/2X/e/e029f06cd0e6ff02714482cbe4502a50b77215e4.png',
+    'https://forum.506investorgroup.com/uploads/default/original/2X/7/7763342ba2bc632367f2eb42c23cf135788a6667.png',
+    'https://forum.506investorgroup.com/uploads/default/original/2X/8/8135366235230b1f8b683797b56c7691e6ece3b3.png',
+    'https://forum.506investorgroup.com/uploads/default/original/2X/f/f7476b5173dd178a66f190156f4971b55c65eaf8.png',
+    'https://forum.506investorgroup.com/uploads/default/original/2X/3/3546b2d4b26bd4279baaca08ecd779f2ad72770e.png',
+    'https://forum.506investorgroup.com/uploads/default/original/2X/d/d92c2a79de373df890b4e8e86041c361e03272bd.png',
+    'https://forum.506investorgroup.com/uploads/default/original/2X/6/62d54e2922409b7aa629814c547873055e9b1d66.png' # black
+]
+
+
+def get_bullet(cat):
+    idx = 8
+    if 'premium' in cat.lower():
+        idx = 0
+    elif 'equity' in cat.lower():
+        idx = 1
+    elif 'debt' in cat.lower():
+        idx = 2
+    elif 'alternative' in cat.lower():
+        idx = 3
+    elif 'sponsors' in cat.lower():
+        idx = 4
+    elif 'members' in cat.lower():
+        idx = 5
+    elif 'platforms' in cat.lower():
+        idx = 6
+    elif 'general' in cat.lower():
+        idx = 7
+    elif 'deals' in cat.lower():
+        idx = 0
+    print cat, idx
+    return bullets[idx]
+
+
 
 def cmp_topic_categories(x, y):
     return cmp(x['topic_categories'], y['topic_categories'])
@@ -100,53 +138,34 @@ class ProcessDigest(Thread):
             # Note topic_categories may be joined by now
             topics_in_cat = [t for t in topics if cat == t['topic_categories']]
             color = topics_in_cat[0]['topic_emblem_or_color']
+            img = '<img src="%s" style="width:10px;height:10px;margin-right:6px;">' % get_bullet(cat)
 
-            html += '<table>'
-            html += '<tr>'
-            html += '<td>'
 
-            # Paragraph makes it better in outlook
-            html += '<p style="color:#%s;">' % '888888'
 
-            # table, not span, works for color emblem in Outlook
-            html += '<table style="width:10px;height:10px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;background-color:#%s">' % color
-            html += '<tr padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
-            html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
-            html += '</td>'
-            html += '</tr>'
-            html += '</table>'
 
-            html += '</p>'
 
-            html += '</td>'
 
-            html += '<td>'
+
+            html += '<span>'
+            html += img
             html += ' '
             html += '<b>'
             html += cat
             html += '</b>'
+            html += '</span>'
 
-            html += '</td>'
-            html += '</tr>'
-            html += '</table>'
 
-            html += '<ul>'
+
+
+
+
+            html += '<ul style="margin-top:10px;margin-bottom:20px;">'
             for topic in topics_in_cat:
                 html += '<li>'
                 html += self.topic_to_link(topic)
                 html += '</li>'
             html += '</ul>'
 
-        return html
-
-    def color_block(self, color):
-        html = '<table padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;width=10px;height=10px;background-color=#%s>' % color
-        html += '<tr>'
-        html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;>'
-        html += ' '
-        html += '</td>'
-        html += '</tr>'
-        html += '</table>'
         return html
 
 
@@ -164,9 +183,13 @@ class ProcessDigest(Thread):
         color = topic['topic_emblem_or_color']
         # cats list has been joined to a string; join it with tags
         cats_and_tags = [cats] + tags
+        img = '<img src="%s" style="width:10px;height:10px;margin-right:6px;">' % get_bullet(cats)
 
         # first a link so the top topics table can link to this topic
         html = '<a rel="nofollow" name="%s"></a>' % self.topic_to_linkname(topic)
+
+
+
 
         html += '<table>'
 
@@ -180,24 +203,6 @@ class ProcessDigest(Thread):
         # Topic title, with link to topic on forum
         html += '<tr>'
 
-        # start with Deal Summary button before topic? I didn't get this to work yet
-        # but haven't spent much time. Anyway the link is safer and more explicit.
-        # if 'Investments' in cats or 'Platforms' in cats:
-        #     deal_summary_img = 'https://forum.506investorgroup.com/user_avatar/forum.506investorgroup.com/summary/26/2120_2.png'
-        #     img = '<img src="%s" style="width:26px;height:26px;border-radius:50%%">' % deal_summary_img
-        #     html += img
-        #
-        #     html += '<td>'
-        #     html += '<table style="width:26px;height:26px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;background-image:#%s">' % deal_summary_img
-        #     html += '<tr padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
-        #     html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
-        #     # html += '<a style="text-decoration:none" href="%s">%s</a>' % (topic['topic_url'], 'Deal Summary')
-        #     html += '<a href="%s">&nbsp;</a>' % topic['topic_url']
-        #     html += '</td>'
-        #     html += '</tr>'
-        #     html += '</table>'
-        #     html += '</td>'
-
         html += '<td>'
         html += '<h3 style="margin-top:15px;margin-bottom:5px">'
         html += '<a style="text-decoration:none" href="%s">%s</a>' % (url, title)
@@ -205,21 +210,16 @@ class ProcessDigest(Thread):
         html += '</td>'
         html += '</tr>'
 
+        html += '</table>'
+
+
+        html += '<table>'
+
         # row for emblem, cats, and tags
         html += '<tr>'
         html += '<td>'
 
-        # Color emblem is surprisingly hard to get square in Outlook. Recommended approach
-        # is to use the background color of a table.
-        html += '<table style="padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px">'
-        html += '<tr>'
-        html += '<td>'
-        html += '<table style="width:10px;height:10px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;background-color:#%s">' % color
-        html += '<tr padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
-        html += '<td padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px>'
-        html += '</td>'
-        html += '</tr>'
-        html += '</table>'
+        html += img
 
         html += '</td>'
 
@@ -230,22 +230,8 @@ class ProcessDigest(Thread):
 
         html += '</tr>'
         html += '</table>'
-        html += '</td>'
-        html += '</tr>'
 
-
-        # row for Deal Summary
-        if 'Investments' in cats or 'Platforms' in cats:
-            html += '<tr>'
-            html += '<td>'
-            html += '<h4 style="margin-top:15px;margin-bottom:5px">'
-            html += 'This topic has a '
-            html += '<a style="text-decoration:none" href="%s">%s</a>' % (topic['topic_url'], 'Deal Summary')
-            html += '.'
-            html += '</h4>'
-            html += '</td>'
-            html += '</tr>'
-
+        html += '<table>'
 
         topic['posts'].sort(cmp=cmp_timestamp)
 
@@ -384,7 +370,7 @@ class ProcessDigest(Thread):
         b = [c.split('|')[0].strip() for c in cats if '|' in c]
         self.ordered_main_categories = list(Set(a + b))
         self.ordered_main_categories.sort()
-        print self.ordered_main_categories
+        # print self.ordered_main_categories
 
     def run(self):
         # Data is the json as dict
@@ -400,7 +386,7 @@ class ProcessDigest(Thread):
             
             
             topics = data['activity']
-            print 'Digest.run got %s, %s, %d topics' % (data['username'], data['email'], len(topics))
+            # print 'Digest.run got %s, %s, %d topics' % (data['username'], data['email'], len(topics))
             if topics:
                 # Pre-processing for convenience
                 self.patch(topics)
@@ -467,14 +453,16 @@ if __name__ == '__main__':
 
     from debug import s
 
-    d = json.loads(s, strict=False)
-    d['username'] = 'admin'
-    d['email'] = 'markschmucker@yahoo.com'
+    # d = json.loads(s, strict=False)
+    # d['username'] = 'admin'
+    # d['email'] = 'markschmucker@yahoo.com'
+    #
+    # t = ProcessDigest(d)
+    # t.start()
 
-    if 1:
-        t = ProcessDigest(d)
-        t.start()
-    else:
-        import requests
-        resp = requests.post('http://digests.506investorgroup.com:8081', json=d)
-        print resp
+    d = json.loads(s, strict=False)
+    d['username'] = 'JohnDoe'
+    d['email'] = 'markschmucker0@gmail.com'
+
+    t = ProcessDigest(d)
+    t.start()
