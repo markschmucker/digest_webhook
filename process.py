@@ -288,7 +288,7 @@ class ProcessDigest(Thread):
             if p['raw']:
                 # Format with same method as other posts, but allow 500 chars
                 h = self.post_to_html(p, 'Announcement', 500)
-                caption = 'Important Announcement'
+                caption = 'Featured Post'
                 img = '<img src="%s" style="width:45px;height:45px;border-radius:50%%">' % p['avatar']
 
                 # Add avatar and caption to the post
