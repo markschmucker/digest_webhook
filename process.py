@@ -339,12 +339,7 @@ class ProcessDigest(Thread):
             html += '<td>'
             html += img
             html += '</td>'
-            html += '<td style="padding-left:20px">' # need to push this change, else most-liked will be grey
-            html += '<div style="color:#%s">' % '888888'
-            html += '<b>'
-            html += caption
-            html += '</b>'
-            html += '</div>'
+            html += '<td style="padding-left:20px">'
             html += h
             html += '</td>'
             html += '</tr>'
@@ -355,6 +350,12 @@ class ProcessDigest(Thread):
         html = ''
         posts = self.data.get('favorite_posts')
         if posts:
+            caption = 'Today\'s Most-Liked Posts'
+            html += '<div style="color:#%s">' % '888888'
+            html += '<b>'
+            html += caption
+            html += '</b>'
+            html += '</div>'
             for p in posts:
                 html += self.get_favorite_post(p)
         return html
