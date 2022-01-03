@@ -145,7 +145,7 @@ class ProcessDigest(Thread):
 
 
 
-
+            """
             html += '<span>'
             html += img
             html += ' '
@@ -153,6 +153,22 @@ class ProcessDigest(Thread):
             html += cat
             html += '</b>'
             html += '</span>'
+            """
+
+
+
+            html += '<table>'
+            html += '<tr>'
+            html += '<td>'
+            html += img
+            html += '</td>'
+            html += '<td>'
+            html += '<b>'
+            html += cat
+            html += '</b>'
+            html += '</td>'
+            html += '</tr>'
+            html += '</table>'
 
 
 
@@ -453,16 +469,16 @@ if __name__ == '__main__':
 
     from debug import s
 
-    # d = json.loads(s, strict=False)
-    # d['username'] = 'admin'
-    # d['email'] = 'markschmucker@yahoo.com'
-    #
-    # t = ProcessDigest(d)
-    # t.start()
-
     d = json.loads(s, strict=False)
-    d['username'] = 'JohnDoe'
-    d['email'] = 'markschmucker0@gmail.com'
+    d['username'] = 'admin'
+    d['email'] = 'markschmucker@yahoo.com'
 
     t = ProcessDigest(d)
     t.start()
+
+    # d = json.loads(s, strict=False)
+    # d['username'] = 'JohnDoe'
+    # d['email'] = 'markschmucker0@gmail.com'
+    #
+    # t = ProcessDigest(d)
+    # t.start()
