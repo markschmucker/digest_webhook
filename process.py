@@ -398,6 +398,7 @@ class ProcessDigest(Thread):
             if data['email'] == 'markschmucker@yahoo.com':
                 try:
                     send_simple_email('markschmucker@yahoo.com', 'json to debug', json.dumps(data))
+                    logger.info(json.dumps(data))
                 except Exception:
                     pass
             
