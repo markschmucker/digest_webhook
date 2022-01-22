@@ -111,13 +111,23 @@ class ProcessDigest(Thread):
             s += '</b>'
             s += ' '
 
+            s += '<i>'
+            s += 'in '
+            s += '<b>'
+            s += post['topic_title']
+            s += '</b>'
+            s += ','
+            s += '</i>'
+            s += ' '
+
+            s += '<i>'
             s += date_str
             s += ': '
+            s += '</i>'
             s += ' '
 
             s += self.shorten(self.spacify(post['raw']), max_len)
             s += ' '
-            #s += post_url(post, topic) + '...'
             s += '<a href="%s">More...</a>' % post['url']
 
         s = '<p style="margin-top:5px;margin-bottom:5px">' + s + '</p>'
@@ -330,7 +340,6 @@ class ProcessDigest(Thread):
         if p['raw']:
             # Format with same method as other posts, but allow 500 chars
             h = self.post_to_html(p, 'Favorite', 500)
-            caption = 'Today\'s Most-Liked Post'
             img = '<img src="%s" style="width:45px;height:45px;border-radius:50%%">' % p['avatar']
 
             # Add avatar and caption to the post
@@ -469,9 +478,13 @@ if __name__ == '__main__':
     # s = f.read()
     # f.close()
 
-    from debug import s
+    # from debug import s
+    # d = json.loads(s, strict=False)
 
-    d = json.loads(s, strict=False)
+    with open('new.json', 'rt') as f:
+        s = f.read()
+        d = json.loads(s)
+
     d['username'] = 'admin'
     d['email'] = 'markschmucker@yahoo.com'
 
