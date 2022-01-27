@@ -98,7 +98,7 @@ class ProcessDigest(Thread):
             txt = self._spacify(txt)
         return txt
 
-    def post_to_html(self, post, topic, max_len=200):
+    def post_to_html(self, post, topic, max_len=200, include_topic_title=False):
 
         s = ''
         if post['raw']:
@@ -111,14 +111,15 @@ class ProcessDigest(Thread):
             s += '</b>'
             s += ' '
 
-            s += '<i>'
-            s += 'in '
-            s += '<b>'
-            s += post['topic_title']
-            s += '</b>'
-            s += ','
-            s += '</i>'
-            s += ' '
+            if include_topic_title:
+                s += '<i>'
+                s += 'in '
+                s += '<b>'
+                s += post['topic_title']
+                s += '</b>'
+                s += ','
+                s += '</i>'
+                s += ' '
 
             s += '<i>'
             s += date_str
@@ -265,7 +266,7 @@ class ProcessDigest(Thread):
         for post in topic['posts']:
             html += '<tr style = "padding-top:0px;padding-bottom:0px">'
             html += '<td style = "padding-top:0px;padding-bottom:0px">'
-            html += self.post_to_html(post, topic)
+            html += self.post_to_html(post, topic, 200, False)
             html += '</td>'
             html += '</tr>'
 
@@ -313,7 +314,7 @@ class ProcessDigest(Thread):
         if p:
             if p['raw']:
                 # Format with same method as other posts, but allow 500 chars
-                h = self.post_to_html(p, 'Announcement', 500)
+                h = self.post_to_html(p, 'Announcement', 500, True)
                 caption = 'Featured Post'
                 img = '<img src="%s" style="width:45px;height:45px;border-radius:50%%">' % p['avatar']
 
@@ -339,7 +340,7 @@ class ProcessDigest(Thread):
         html = ''
         if p['raw']:
             # Format with same method as other posts, but allow 500 chars
-            h = self.post_to_html(p, 'Favorite', 500)
+            h = self.post_to_html(p, 'Favorite', 500, True)
             img = '<img src="%s" style="width:45px;height:45px;border-radius:50%%">' % p['avatar']
 
             # Add avatar and caption to the post
