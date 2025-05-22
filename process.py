@@ -44,7 +44,7 @@ def get_bullet(cat):
         idx = 7
     elif 'deals' in cat.lower():
         idx = 0
-    print cat, idx
+    # print cat, idx
     return bullets[idx]
 
 
